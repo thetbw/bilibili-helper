@@ -32,7 +32,6 @@ object BiliHelperPlugin : KotlinPlugin(
         }.isSuccess
     }
 
-    private fun <T : PluginConfig> T.save() = loader.configStorage.store(this@BiliHelperPlugin, this)
 
     override fun onEnable() {
         BiliTaskData.reload()
@@ -52,6 +51,7 @@ object BiliHelperPlugin : KotlinPlugin(
         BiliLiveCommand.register()
         BiliSeasonCommand.register()
         BiliSearchCommand.register()
+        BiliReplayCommand.register()
 
         if (selenium) {
             driver = RemoteWebDriver(config = SeleniumToolConfig)
@@ -68,6 +68,7 @@ object BiliHelperPlugin : KotlinPlugin(
         BiliLiveCommand.unregister()
         BiliSeasonCommand.unregister()
         BiliSearchCommand.unregister()
+        BiliReplayCommand.unregister()
 
         BiliListener.stop()
 

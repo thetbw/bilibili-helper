@@ -20,4 +20,7 @@ object BiliHelperSettings : ReadOnlyPluginConfig("BiliHelperSettings") {
 
     @ValueDescription("番剧 订阅 访问间隔时间，单位分钟")
     val season: Long by value(30L)
+
+    @ValueDescription("回复拉取时间间隔 单位分钟")
+    val reply: Long by value(1L)
 }

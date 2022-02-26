@@ -2,11 +2,14 @@ package xyz.cssxsh.bilibili
 
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import xyz.cssxsh.bilibili.api.*
 import xyz.cssxsh.bilibili.data.*
+import xyz.cssxsh.mirai.plugin.EditThisCookie
+import xyz.cssxsh.mirai.plugin.toCookie
 import java.io.File
 
 internal class ApiTest {
@@ -128,6 +131,23 @@ internal class ApiTest {
                 if (exists().not()) {
                     writeBytes(client.useHttpClient { it.get(image) })
                 }
+            }
+        }
+    }
+
+    @Test
+    fun reply(): Unit = runBlocking {
+        val cookiePath = "D:\\temp\\cookie.json";
+        client.apply {
+            storage.container.addAll(
+                BiliClient.Json.decodeFromString<List<EditThisCookie>>(File(cookiePath).readText()).mapNotNull {
+                    it.runCatching { toCookie() }.getOrNull()
+                })
+            withLog(this.getReplyInfo(replyTime = 1642942088)) {
+                it.items.forEach {
+                    appendLine(it.item.sourceContent)
+                }
+
             }
         }
     }

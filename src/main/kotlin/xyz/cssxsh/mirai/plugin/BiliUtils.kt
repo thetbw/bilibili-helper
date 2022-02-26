@@ -61,6 +61,7 @@ internal val client by lazy {
 
 internal fun BiliClient.load() {
     storage.container.addAll(cookies)
+    logger.info("总共加载了 ${cookies.size} 条cookie")
 }
 
 internal fun BiliClient.save() {

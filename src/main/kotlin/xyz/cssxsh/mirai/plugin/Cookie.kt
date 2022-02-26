@@ -3,6 +3,7 @@ package xyz.cssxsh.mirai.plugin
 import io.ktor.http.*
 import io.ktor.util.date.*
 import kotlinx.serialization.*
+import java.net.HttpCookie
 
 @Serializable
 data class EditThisCookie(
@@ -53,3 +54,10 @@ fun Cookie.toEditThisCookie(id: Int = 0) = EditThisCookie(
     httpOnly = httpOnly,
     id = id
 )
+fun Cookie.toHttpCookie() = HttpCookie(name, value).apply {
+    this.comment = comment
+    this.isHttpOnly = httpOnly
+    this.secure = secure
+    this.path = path.orEmpty()
+    this.domain = domain
+}

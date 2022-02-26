@@ -8,6 +8,7 @@ import java.time.*
 data class BiliTask(
     @SerialName("name")
     val name: String,
+    //上次更新时间
     @SerialName("last")
     @Serializable(OffsetDateTimeSerializer::class)
     val last: OffsetDateTime = OffsetDateTime.now(),

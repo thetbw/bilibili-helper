@@ -36,6 +36,7 @@ kotlin {
 dependencies {
     implementation(ktor("client-serialization", Versions.ktor))
     implementation(ktor("client-encoding", Versions.ktor))
+    implementation("cn.hutool:hutool-all:5.7.20")
     implementation(mxlib("selenium", Versions.mxlib)) {
         exclude("org.seleniumhq.selenium")
         exclude("junit")

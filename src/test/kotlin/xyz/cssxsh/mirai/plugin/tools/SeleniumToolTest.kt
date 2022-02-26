@@ -27,6 +27,8 @@ internal class SeleniumToolTest {
         override val width: Int = 768
         override val height: Int = 1024
         override val pixelRatio: Int = 3
+        override val browser: String
+            get() = TODO("Not yet implemented")
     }
 
     @Test

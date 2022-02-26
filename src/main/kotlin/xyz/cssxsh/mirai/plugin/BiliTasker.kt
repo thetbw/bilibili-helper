@@ -294,3 +294,54 @@ object BiliSeasonWaiter : Waiter<SeasonSection>(), CoroutineScope by BiliHelperP
 
     override suspend fun initTask(id: Long): BiliTask = BiliTask(client.getSeasonSection(id).mainSection.title)
 }
+
+object BiliReplyLoader : Loader<BiliReplyItem>(), CoroutineScope by BiliHelperPlugin.childScope("ReplayLoader") {
+
+
+    override val fast: Long = Minute
+    override val slow: Long = BiliHelperSettings.reply * Minute
+    override val tasks: MutableMap<Long, BiliTask> by BiliTaskData::reply
+
+    override suspend fun BiliReplyItem.build(contact: Contact): Message {
+        return ("你的内容 '${this.item.title}' 收到一个回复!\n" +
+            "回复人：${this.user.nickname},\n" +
+            "回复信息：${this.item.sourceContent}").toPlainText()
+    }
+
+    override suspend fun initTask(id: Long): BiliTask = BiliTask("开启回复通知")
+
+    override suspend fun load(id: Long): List<BiliReplyItem> {
+        val totalItems = ArrayList<BiliReplyItem>()
+        var replyInfo = client.getReplyInfo()
+        val currentCursor = replyInfo.lastViewAt
+        var hasLast = true
+        var pageCount = 0
+        val maxPage = 5
+        while (hasLast) {
+            pageCount++
+            replyInfo.items.forEach {
+                if (it.replyTime > currentCursor) {
+                    totalItems.add(it)
+                } else {
+                    hasLast = false
+                }
+            }
+            if (hasLast) {
+                replyInfo = client.getReplyInfo(replyTime = currentCursor)
+            }
+            if (pageCount > maxPage) {
+                break
+            }
+        }
+        return totalItems
+    }
+
+    //返回最后更新的时间
+    override fun List<BiliReplyItem>.last(): OffsetDateTime = OffsetDateTime.now()
+
+    //返回这个时间点之后的数据
+    override fun List<BiliReplyItem>.after(last: OffsetDateTime): List<BiliReplyItem> = this
+
+    override suspend fun List<BiliReplyItem>.near(): Boolean = false
+
+}

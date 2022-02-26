@@ -53,6 +53,11 @@ const val SEARCH_TYPE = "https://api.bilibili.com/x/web-interface/search/type"
 // Suit
 const val SUIT_ITEMS = "https://api.bilibili.com/x/garb/mall/item/suit/v2"
 
+//reply
+const val REPLY_INFO = "https://api.bilibili.com/x/msgfeed/reply"
+
+//session
+
 internal suspend inline fun <reified T> BiliClient.json(
     url: String,
     crossinline block: HttpRequestBuilder.() -> Unit
