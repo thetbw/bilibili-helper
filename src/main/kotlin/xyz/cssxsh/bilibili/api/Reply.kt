@@ -14,7 +14,6 @@ suspend fun BiliClient.getReplyInfo(
     replyTime: Long? = null,
     url: String = REPLY_INFO
 ): BiliReplyInfo {
-    logger.info("开始请求b站评论接口，id：$id replyTime: $replyTime")
     val tempData = BiliClient.Json.decodeFromString<TempData>(
         HttpRequest.get(url)
             .cookie(storage.container.map { it.toHttpCookie() })
@@ -22,7 +21,9 @@ suspend fun BiliClient.getReplyInfo(
             .form("reply_time", replyTime)
             .execute().body()
     );
-    logger.info("请求结果 code： ${tempData.code} message: ${tempData.message}")
+    if (tempData.code != 0) {
+        logger.info("请求异常 code： ${tempData.code} message: ${tempData.message}")
+    }
     val temp = tempData.data ?: tempData.result
     return BiliClient.Json.decodeFromJsonElement(requireNotNull(temp) { tempData.message })
 }
